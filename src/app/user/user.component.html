@@ -1,0 +1,16 @@
+<li class="py-2">
+  <div
+    class="flex cursor-pointer items-center justify-between rounded-lg border"
+  >
+    <div
+      class="flex flex-1 items-center space-x-4 p-2"
+      (click)="buttonHandle()"
+    >
+      <img class="h-10 w-10 rounded-full" [src]="user.avatar_url" alt="" />
+      <div>{{ user.login }}</div>
+    </div>
+    <div class="cursor-pointer p-4" (click)="delete()">
+      <fa-icon class="text-gray-700" [icon]="faTrash"></fa-icon>
+    </div>
+  </div>
+</li>

@@ -1,0 +1,48 @@
+<main
+  class="mx-auto flex h-screen flex-col items-center space-y-4 p-4 md:max-w-[35rem]"
+>
+  <img class="" src="../../assets/logo.png" alt="" />
+  <form class="w-full">
+    <div class="relative">
+      <div
+        class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3"
+      >
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </div>
+      <input
+        #filter
+        autocomplete="off"
+        id="default-search"
+        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pe-[6rem] ps-10 text-sm text-gray-900 outline-green-500"
+        placeholder="Buscar usuário"
+      />
+      <button
+        type="submit"
+        class="absolute bottom-2.5 end-2.5 rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white hover:bg-green-800 focus:outline-none"
+        (click)="searchUser(filter.value)"
+      >
+        Buscar
+      </button>
+    </div>
+  </form>
+  <p class="self-start text-4xl text-[#003030]">Lista Usuários</p>
+  <div
+    *ngIf="isLoading; else showTemplate"
+    class="flex flex-grow items-center justify-center"
+  >
+    <mat-spinner class="self-center" diameter="40"></mat-spinner>
+  </div>
+  <ng-template #showTemplate>
+    <p
+      class="flex flex-grow items-center justify-center"
+      *ngIf="users.length === 0; else showList"
+    >
+      Lista vazia
+    </p>
+    <ng-template #showList>
+      <ul class="w-full divide-y">
+        <app-user *ngFor="let user of users" [user]="user"></app-user>
+      </ul>
+    </ng-template>
+  </ng-template>
+</main>
