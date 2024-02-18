@@ -42,13 +42,11 @@
     </p>
     <ng-template #showList>
       <ul class="w-full divide-y">
-        <mat-accordion>
-          <app-user
-            *ngFor="let user of filteredUsers"
-            [user]="user"
-            (deleteUsersEvent)="refreshUsers($event)"
-          ></app-user>
-        </mat-accordion>
+        <app-user
+          *ngFor="let user of filteredUsers; trackBy: trackByFn"
+          [user]="user"
+          (deleteUsersEvent)="refreshUsers($event)"
+        ></app-user>
       </ul>
     </ng-template>
   </ng-template>

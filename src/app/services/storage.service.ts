@@ -1,4 +1,4 @@
-import { Injectable, afterNextRender } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 
 @Injectable({

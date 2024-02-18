@@ -12,11 +12,11 @@ import {
   trigger,
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [FontAwesomeModule, MatExpansionModule, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
   animations: [
@@ -37,6 +37,7 @@ import { CommonModule } from '@angular/common';
       transition('closed => open', [animate('1s ease-out')]),
     ]),
   ],
+  imports: [FontAwesomeModule, MatExpansionModule, CommonModule, MapComponent],
 })
 export class UserComponent {
   @Input() user!: User;

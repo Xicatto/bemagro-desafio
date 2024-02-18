@@ -1,7 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, PLATFORM_ID, afterNextRender, inject } from '@angular/core';
+import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +21,6 @@ import { UserComponent } from '../user/user.component';
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    MatExpansionModule,
   ],
 })
 export class HomeComponent {
@@ -36,10 +34,6 @@ export class HomeComponent {
   platformId = inject(PLATFORM_ID);
 
   constructor() {
-    // afterNextRender(() => {
-    //   localStorage.clear();
-    // });
-
     if (isPlatformBrowser(this.platformId)) {
       const users = this.storageService.getData('users');
       if (users) {
@@ -99,5 +93,9 @@ export class HomeComponent {
     this.filteredUsers = this.users.filter((user) =>
       user?.login.toLowerCase().includes(text.toLowerCase()),
     );
+  }
+
+  trackByFn(index: number) {
+    return index;
   }
 }
