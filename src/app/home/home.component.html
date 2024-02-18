@@ -12,6 +12,7 @@
       <input
         #filter
         autocomplete="off"
+        (input)="filterUser(filter.value)"
         id="default-search"
         class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pe-[6rem] ps-10 text-sm text-gray-900 outline-green-500"
         placeholder="Buscar usuário"
@@ -41,7 +42,13 @@
     </p>
     <ng-template #showList>
       <ul class="w-full divide-y">
-        <app-user *ngFor="let user of users" [user]="user"></app-user>
+        <mat-accordion>
+          <app-user
+            *ngFor="let user of filteredUsers"
+            [user]="user"
+            (deleteUsersEvent)="refreshUsers($event)"
+          ></app-user>
+        </mat-accordion>
       </ul>
     </ng-template>
   </ng-template>

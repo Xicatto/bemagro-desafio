@@ -1,18 +1,14 @@
-import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  afterNextRender,
-  inject,
-} from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, PLATFORM_ID, afterNextRender, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { User } from '../interfaces/user';
 import { GithubService } from '../services/github.service';
 import { StorageService } from '../services/storage.service';
 import { UserComponent } from '../user/user.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
   ],
 })
 export class HomeComponent {
@@ -33,40 +30,74 @@ export class HomeComponent {
   users: User[] = [];
   filteredUsers: User[] = [];
   isLoading: boolean = true;
+  searchText: string = '';
   githubService: GithubService = inject(GithubService);
   storageService: StorageService = inject(StorageService);
+  platformId = inject(PLATFORM_ID);
 
-  constructor(private changeDetector: ChangeDetectorRef) {
+  constructor() {
     // afterNextRender(() => {
     //   localStorage.clear();
     // });
 
-    afterNextRender(() => {
+    if (isPlatformBrowser(this.platformId)) {
       const users = this.storageService.getData('users');
       if (users) {
         this.users = users;
+        this.filteredUsers = users;
       }
       this.isLoading = false;
-      this.changeDetector.detectChanges();
-    });
+    }
+  }
+
+  refreshUsers(users: User[]) {
+    this.users = users;
+    this.filterUser(this.searchText);
   }
 
   async searchUser(text: string) {
     this.isLoading = true;
-    if (this.users != null) {
+    if (this.users.length > 0) {
       const userFound = this.users.find(
         (e) => e.login.toLowerCase() == text.toLowerCase(),
       );
+      if (userFound) {
+        console.log('Found');
+        alert('Usuário já existente');
+      } else if (text == '') {
+        alert('Input vazio');
+      } else {
+        await this.fetchGithubUser(text);
+      }
+      this.isLoading = false;
+      return;
     }
+    await this.fetchGithubUser(text);
+    this.isLoading = false;
+  }
+
+  async fetchGithubUser(text: string) {
     try {
       const user: User = await this.githubService.getGithubUser(text);
-      console.log(user);
       this.users.push(user);
+
+      this.filterUser(text);
 
       this.storageService.setData('users', this.users);
     } catch (e: any) {
-      console.log(e.message);
+      alert('Usuário não existe');
     }
-    this.isLoading = false;
+  }
+
+  filterUser(text: string) {
+    this.searchText = text;
+    if (!text) {
+      this.filteredUsers = this.users;
+      return;
+    }
+
+    this.filteredUsers = this.users.filter((user) =>
+      user?.login.toLowerCase().includes(text.toLowerCase()),
+    );
   }
 }
