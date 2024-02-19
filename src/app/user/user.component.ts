@@ -1,43 +1,17 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { User } from '../interfaces/user';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { StorageService } from '../services/storage.service';
-import { MatExpansionModule } from '@angular/material/expansion';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { User } from '../interfaces/user';
 import { MapComponent } from '../map/map.component';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
-  animations: [
-    trigger('backdrop', [
-      state(
-        'open',
-        style({
-          opacity: 100,
-        }),
-      ),
-      state(
-        'closed',
-        style({
-          opacity: 0,
-        }),
-      ),
-      transition('open => closed', [animate('1s ease-in')]),
-      transition('closed => open', [animate('1s ease-out')]),
-    ]),
-  ],
-  imports: [FontAwesomeModule, MatExpansionModule, CommonModule, MapComponent],
+  imports: [FontAwesomeModule, CommonModule, MapComponent],
 })
 export class UserComponent {
   @Input() user!: User;
